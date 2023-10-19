@@ -13,19 +13,30 @@ const conncectToDb = require('./config/connectToDb');
 // Import Cors
 const cors = require('cors')
 
+// Import Cookie Parser
+const cookieParser = require('cookie-parser')
+
 // Import NoteController
 const notesController = require('./controllers/notesController');
+const userController = require('./controllers/usersController');
+
+const requireAuth = require('./middleware/requireAuth')
 
 
 
 // Create an express app
 const app = express();
 
+
 // Configure express app
 app.use(express.json()); 
+app.use(cookieParser())
 
 // Configure Cors
-app.use(cors())
+app.use(cors({
+    origin: true,
+    credentials: true,
+}))
 
 // Connect to DB
 conncectToDb();
@@ -35,21 +46,28 @@ app.get("/", (req, res)=>{
     res.json({hello: "world"})
 });
 
+app.post("/signup", userController.signup);
+
+app.post("/login", userController.login);
+
+app.get("/logout", userController.logout);
+
+app.get("/check-auth", requireAuth, userController.checkAuth);
 
 // Fetch all notes
 app.get("/notes", notesController.fetchNotes);
 
 // Fetch single note
-app.get("/notes/:id", notesController.fetchNote)
+app.get("/notes/:id", notesController.fetchNote);
 
 // Create one note
-app.post("/notes", notesController.createNote)
+app.post("/notes", notesController.createNote);
 
 // Update 
-app.put("/notes/:id", notesController.updateNote)
+app.put("/notes/:id", notesController.updateNote);
 
 // Delete
-app.delete("/notes/:id", notesController.deleteNote)
+app.delete("/notes/:id", notesController.deleteNote);
 
 //Start Our Server
 app.listen(process.env.PORT);
