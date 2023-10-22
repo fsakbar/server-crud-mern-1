@@ -55,19 +55,19 @@ app.get("/logout", userController.logout);
 app.get("/check-auth", requireAuth, userController.checkAuth);
 
 // Fetch all notes
-app.get("/notes", notesController.fetchNotes);
+app.get("/notes", requireAuth, notesController.fetchNotes);
 
 // Fetch single note
-app.get("/notes/:id", notesController.fetchNote);
+app.get("/notes/:id", requireAuth, notesController.fetchNote);
 
 // Create one note
-app.post("/notes", notesController.createNote);
+app.post("/notes", requireAuth, notesController.createNote);
 
 // Update 
-app.put("/notes/:id", notesController.updateNote);
+app.put("/notes/:id", requireAuth, notesController.updateNote);
 
 // Delete
-app.delete("/notes/:id", notesController.deleteNote);
+app.delete("/notes/:id", requireAuth, notesController.deleteNote);
 
 //Start Our Server
 app.listen(process.env.PORT);
